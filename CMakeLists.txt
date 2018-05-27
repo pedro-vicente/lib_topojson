@@ -7,6 +7,8 @@ endif(MSVC)
 
 include_directories(gason/src)
 set(sources ${sources})
+set(sources ${sources} topojson.cc)
+set(sources ${sources} topojson.hh)
 set(sources ${sources} gason/src/gason.h)
 set(sources ${sources} gason/src/gason.cpp)
 set(sources ${sources} parser.cc)

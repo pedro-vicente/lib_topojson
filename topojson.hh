@@ -27,6 +27,7 @@ public:
 
 private:
   int parse_root(JsonValue value);
+  int parse_topology(JsonValue value);
 
 };
 

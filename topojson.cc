@@ -63,6 +63,7 @@ int topojson_t::parse_root(JsonValue value)
       std::string str = node->value.toString();
       if (str.compare("Topology"))
       {
+        //define a type enumerator
       }
     }
     //A topology may have a “transform” member whose value is a transform object.
@@ -75,6 +76,11 @@ int topojson_t::parse_root(JsonValue value)
     {
       assert(node->value.getTag() == JSON_OBJECT);
       parse_topology(node->value);
+    }
+    else if (std::string(node->key).compare("arcs") == 0)
+    {
+      assert(node->value.getTag() == JSON_ARRAY);
+      parse_arcs(node->value);
     }
   }
   return 0;
@@ -199,12 +205,43 @@ int topojson_t::parse_transform(JsonValue value)
     {
       assert(node->value.getTag() == JSON_ARRAY);
       JsonValue arr = node->value;
-      translate[0] = arr.toNode()->value.toNumber();;
+      translate[0] = arr.toNode()->value.toNumber();
       translate[1] = arr.toNode()->next->value.toNumber();
       std::cout << "\ttranslate:\t" << translate[0] << "," << translate[1] << "\n";
     }
 
   }//node
+  return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//topojson_t::parse_arcs
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int topojson_t::parse_arcs(JsonValue value)
+{
+  //A topology must have an “arcs” member whose value is an array of arrays of positions. 
+  //Each arc must be an array of two or more positions.
+  //If a topology is quantized, the positions of each arc in the topology which are quantized 
+  //must be delta - encoded.
+  assert(value.getTag() == JSON_ARRAY);
+  for (JsonNode *node_arr_0 = value.toNode(); node_arr_0 != nullptr; node_arr_0 = node_arr_0->next)
+  {
+    assert(node_arr_0->value.getTag() == JSON_ARRAY);
+    JsonValue arr_1 = node_arr_0->value;
+    for (JsonNode *node_arr_1 = arr_1.toNode(); node_arr_1 != nullptr; node_arr_1 = node_arr_1->next)
+    {
+      assert(node_arr_1->value.getTag() == JSON_ARRAY);
+      JsonValue arr_2 = node_arr_1->value;
+      std::vector<double> inner_arr;
+      for (JsonNode *node_arr_2 = arr_2.toNode(); node_arr_2 != nullptr; node_arr_2 = node_arr_2->next)
+      {
+        assert(node_arr_2->value.getTag() == JSON_NUMBER);
+        inner_arr.push_back(node_arr_2->value.toNumber());
+      }//node_arr_2
+      arcs.push_back(inner_arr);
+    }//node_arr_1
+  }//node_arr_0
   return 0;
 }
 

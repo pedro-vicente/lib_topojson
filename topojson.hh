@@ -31,9 +31,11 @@ private:
   int parse_topology(JsonValue value);
   int parse_transform(JsonValue value);
   int parse_geometry_object(JsonValue value);
+  int parse_arcs(JsonValue value);
   std::vector<double> transform_point(const int position_quant[2]);
   double scale[2];
   double translate[2];
+  std::vector<std::vector<double>> arcs;
 
 };
 

@@ -13,6 +13,15 @@
 #include <vector>
 #include "gason.h"
 
+//A topology must have an “arcs” member whose value is an array of arrays of positions. 
+//Each arc must be an array of two or more positions.
+class WT_API arc_t
+{
+public:
+  arc_t() {}
+  std::vector<std::vector<double>> vec;
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //topojson_t
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +44,7 @@ private:
   std::vector<double> transform_point(const int position_quant[2]);
   double scale[2];
   double translate[2];
-  std::vector<std::vector<double>> arcs;
+  std::vector<arc_t> m_vec_arcs;
 
 };
 

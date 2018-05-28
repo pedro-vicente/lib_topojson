@@ -229,6 +229,8 @@ int topojson_t::parse_arcs(JsonValue value)
   {
     assert(node_arr_0->value.getTag() == JSON_ARRAY);
     JsonValue arr_1 = node_arr_0->value;
+
+    arc_t arc;
     for (JsonNode *node_arr_1 = arr_1.toNode(); node_arr_1 != nullptr; node_arr_1 = node_arr_1->next)
     {
       assert(node_arr_1->value.getTag() == JSON_ARRAY);
@@ -239,9 +241,13 @@ int topojson_t::parse_arcs(JsonValue value)
         assert(node_arr_2->value.getTag() == JSON_NUMBER);
         inner_arr.push_back(node_arr_2->value.toNumber());
       }//node_arr_2
-      arcs.push_back(inner_arr);
+      arc.vec.push_back(inner_arr);
     }//node_arr_1
+
+    m_vec_arcs.push_back(arc);
   }//node_arr_0
+
+  std::cout << "\tarcs size:\t" << m_vec_arcs.size() << "\n";
   return 0;
 }
 

@@ -247,7 +247,12 @@ int topojson_t::parse_arcs(JsonValue value)
     m_vec_arcs.push_back(arc);
   }//node_arr_0
 
-  std::cout << "\tarcs size:\t" << m_vec_arcs.size() << "\n";
+  std::cout << "arcs size: " << m_vec_arcs.size() << "\n";
+  for (size_t idx = 0; idx < m_vec_arcs.size(); idx++)
+  {
+    arc_t arc = m_vec_arcs.at(idx);
+    std::cout << "\tarc size: " << arc.vec.size() << "\n";
+  }
   return 0;
 }
 

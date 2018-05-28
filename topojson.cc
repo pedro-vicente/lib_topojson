@@ -65,6 +65,12 @@ int topojson_t::parse_root(JsonValue value)
       {
       }
     }
+    //A topology may have a “transform” member whose value is a transform object.
+    else if (std::string(node->key).compare("transform") == 0)
+    {
+      assert(node->value.getTag() == JSON_OBJECT);
+      parse_transform(node->value);
+    }
     else if (std::string(node->key).compare("objects") == 0)
     {
       assert(node->value.getTag() == JSON_OBJECT);
@@ -149,3 +155,48 @@ int topojson_t::parse_geometry_object(JsonValue value)
   }//node
   return 0;
 }
+
+//Transforms
+//A topology may have a “transform” member whose value is a transform object.
+//The purpose of the transform is to quantize positions for more efficient serialization, 
+//by representing positions as integers rather than floats.
+//A transform must have a member with the name “scale” whose value is a two - element array of numbers.
+//A transform must have a member with the name “translate” whose value is a two - element array of numbers.
+//Both the “scale” and “translate” members must be of length two.
+//Every position in the topology must be quantized, with the first and second elements in each position an integer.
+//To transform from a quantized position to an absolute position :
+//Multiply each quantized position element by the corresponding scale element.
+//Add the corresponding translate element.
+
+std::vector<double> topojson_t::transform_point(const int position_quant[2])
+{
+  std::vector<double> position;
+  position.push_back(position_quant[0] * scale[0] + translate[0]);
+  position.push_back(position_quant[1] * scale[1] + translate[1]);
+  return position;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//topojson_t::parse_transform
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int topojson_t::parse_transform(JsonValue value)
+{
+  assert(value.getTag() == JSON_OBJECT);
+  for (JsonNode *node = value.toNode(); node != nullptr; node = node->next)
+  {
+    std::string object_name = node->key;
+    std::cout << "\tobject name:\t" << object_name << "\n";
+    if (std::string(node->key).compare("scale") == 0)
+    {
+      assert(node->value.getTag() == JSON_ARRAY);
+    }
+    else if (std::string(node->key).compare("translate") == 0)
+    {
+      assert(node->value.getTag() == JSON_ARRAY);
+    }
+
+  }//node
+  return 0;
+}
+

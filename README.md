@@ -8,9 +8,14 @@ a C++ topoJSON parser. TopoJSON is a format for encoding a variety of geographic
 
 https://github.com/topojson/topojson-specification
 
+# JSON
+
+http://json.org/
+
 JSON parsing is done with gason
 
 https://github.com/vivkin/gason
+
 
 # usage
 
@@ -20,7 +25,7 @@ https://github.com/vivkin/gason
 
 # sample file example.quantized.topojson
 
-```
+```json
 {
   "type": "Topology",
   "transform": {

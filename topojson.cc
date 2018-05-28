@@ -65,8 +65,6 @@ int topojson_t::parse_root(JsonValue value)
       {
       }
     }
-    //A topology must have a member with the name “objects” whose value is another object. 
-    //The value of each member of this object is a geometry object.
     else if (std::string(node->key).compare("objects") == 0)
     {
       assert(node->value.getTag() == JSON_OBJECT);
@@ -83,7 +81,31 @@ int topojson_t::parse_root(JsonValue value)
 int topojson_t::parse_topology(JsonValue value)
 {
   assert(value.getTag() == JSON_OBJECT);
+  //A topology must have a member with the name “objects” whose value is another object. 
+  //The value of each member of this object is a geometry object.
+  for (JsonNode *node = value.toNode(); node != nullptr; node = node->next)
+  {
+    std::string object_name = node->key;
+    std::cout << "\tobject name:\t" << object_name << "\n";
+    JsonValue object = node->value;
+    assert(object.getTag() == JSON_OBJECT);
+    for (JsonNode *geom_obj = object.toNode(); geom_obj != nullptr; geom_obj = geom_obj->next)
+    {
+      //A geometry is a TopoJSON object where the type member’s value is one of the following strings: 
+      //“Point”, “MultiPoint”, “LineString”, “MultiLineString”, “Polygon”, “MultiPolygon”, or “GeometryCollection”.
+      if (std::string(geom_obj->key).compare("type") == 0)
+      {
+        assert(geom_obj->value.getTag() == JSON_STRING);
+        std::string str = geom_obj->value.toString();
+        std::cout << "\tgeometry type:\t" << str << "\n";
+      }
+      else if (std::string(geom_obj->key).compare("geometries") == 0)
+      {
+        assert(geom_obj->value.getTag() == JSON_ARRAY);
+      }
 
 
+    }
+  }
   return 0;
 }

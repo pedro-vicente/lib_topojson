@@ -190,10 +190,18 @@ int topojson_t::parse_transform(JsonValue value)
     if (std::string(node->key).compare("scale") == 0)
     {
       assert(node->value.getTag() == JSON_ARRAY);
+      JsonValue arr = node->value;
+      scale[0] = arr.toNode()->value.toNumber();;
+      scale[1] = arr.toNode()->next->value.toNumber();
+      std::cout << "\tscale:\t" << scale[0] << "," << scale[1] << "\n";
     }
     else if (std::string(node->key).compare("translate") == 0)
     {
       assert(node->value.getTag() == JSON_ARRAY);
+      JsonValue arr = node->value;
+      translate[0] = arr.toNode()->value.toNumber();;
+      translate[1] = arr.toNode()->next->value.toNumber();
+      std::cout << "\ttranslate:\t" << translate[0] << "," << translate[1] << "\n";
     }
 
   }//node

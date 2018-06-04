@@ -22,6 +22,24 @@ public:
   std::vector<std::vector<double>> vec;
 };
 
+//A geometry is a TopoJSON object where the type member’s value is one of the following strings: 
+//“Point”, “MultiPoint”, “LineString”, “MultiLineString”, “Polygon”, “MultiPolygon”, or “GeometryCollection”.
+class WT_API Point
+{
+public:
+  Point() {}
+  std::vector<double> coordinates;
+};
+
+class WT_API LineString
+{
+public:
+  LineString() {}
+  std::vector<int> arcs; //indices into arc_t array
+};
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //topojson_t
 /////////////////////////////////////////////////////////////////////////////////////////////////////

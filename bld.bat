@@ -5,4 +5,4 @@ if not defined DevEnvDir (
 )
 cmake -H. -Bbuild -G "Visual Studio 14 2015 Win64" 
 msbuild build\topojson.sln /target:build /property:configuration=debug
-build\Debug\parser.exe example.topojson
+build\Debug\parser.exe example.quantized.topojson

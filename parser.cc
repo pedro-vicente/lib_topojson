@@ -20,5 +20,12 @@ int main(int argc, char *argv[])
     return 1;
   }
 
+  size_t size_geom = topojson.m_geom.size();
+  for (size_t idx = 0; idx < size_geom; idx++)
+  {
+    std::string str = topojson.m_geom.at(idx).type;
+    std::cout << str << "\n";
+  }
+
   return 0;
 }

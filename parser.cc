@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         size_t size_arcs = polygon.arcs.size();
         for (size_t idx_arc = 0; idx_arc < size_arcs; idx_arc++)
         {
-          size_t index = polygon.arcs.at(idx_arc);
+          int index = polygon.arcs.at(idx_arc);
           arc_t arc = topojson.m_arcs.at(index);
           size_t size_vec_arcs = arc.vec.size();
           for (size_t idx_vec = 0; idx_vec < size_vec_arcs; idx_vec++)

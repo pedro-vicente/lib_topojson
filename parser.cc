@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
     Geometry_t geometry = topojson.m_geom.at(idx_geom);
     if (geometry.type.compare("Polygon") == 0)
     {
-      std::cout << "Polygon" << std::endl;
       size_t size_pol = geometry.m_polygon.size();
       for (size_t idx_pol = 0; idx_pol < size_pol; idx_pol++)
       {
@@ -39,8 +38,11 @@ int main(int argc, char *argv[])
           size_t size_vec_arcs = arc.vec.size();
           for (size_t idx_vec = 0; idx_vec < size_vec_arcs; idx_vec++)
           {
-            std::vector<double> coord = arc.vec.at(idx_vec);
+            std::vector<double> coord_quant = arc.vec.at(idx_vec);
+            int position_quantized[2] = { (int)coord_quant[0], (int)coord_quant[1] };
+            std::vector<double> coord = topojson.transform_point(position_quantized);
             std::cout << coord[0] << " " << coord[1] << "\t";
+
           }//size_vec_arcs
         }//size_arcs
       }//size_pol

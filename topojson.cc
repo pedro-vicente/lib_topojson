@@ -6,6 +6,68 @@
 #include "topojson.hh"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+//is_topojson
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int is_topojson(const char* file_name)
+{
+  char *buf = 0;
+  size_t length;
+  FILE *f;
+  int json_type = -1;
+
+  f = fopen(file_name, "rb");
+  if (!f)
+  {
+    std::cout << "cannot open " << file_name << std::endl;
+    return -1;
+  }
+
+  fseek(f, 0, SEEK_END);
+  length = ftell(f);
+  fseek(f, 0, SEEK_SET);
+  buf = (char*)malloc(length);
+  if (buf)
+  {
+    fread(buf, 1, length, f);
+  }
+  fclose(f);
+
+  char *endptr;
+  JsonValue value;
+  JsonAllocator allocator;
+  int rc = jsonParse(buf, &endptr, &value, allocator);
+  if (rc != JSON_OK)
+  {
+    std::cout << "invalid JSON format for " << buf << std::endl;
+    return -1;
+  }
+
+  //parse
+  for (JsonNode *node = value.toNode(); node != nullptr; node = node->next)
+  {
+    //A topology is a TopoJSON object where the type member’s value is “Topology”.
+    if (std::string(node->key).compare("type") == 0)
+    {
+      assert(node->value.getTag() == JSON_STRING);
+      std::string str = node->value.toString();
+      if (str.compare("Topology"))
+      {
+        json_type++;
+      }
+    }
+    else if (std::string(node->key).compare("arcs") == 0)
+    {
+      assert(node->value.getTag() == JSON_ARRAY);
+      json_type++;
+    }
+  }
+
+  free(buf);
+  return json_type;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 //topojson_t::convert
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -344,7 +406,7 @@ std::vector<double> topojson_t::get_first()
 {
   std::vector<double> first;
   size_t size_geom = m_geom.size();
-  for (size_t idx_geom = 0; idx_geom < size_geom; idx_geom++)
+  for (idx_geom = 0; idx_geom < size_geom; idx_geom++)
   {
     Geometry_t geometry = m_geom.at(idx_geom);
     if (geometry.type.compare("Polygon") == 0)

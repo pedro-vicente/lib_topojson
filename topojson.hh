@@ -13,6 +13,8 @@
 #include <vector>
 #include "gason.h"
 
+
+
 //A topology must have an “arcs” member whose value is an array of arrays of positions. 
 //Each arc must be an array of two or more positions.
 class WT_API arc_t

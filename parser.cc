@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
       size_t size_pol = geometry.m_polygon.size();
       for (size_t idx_pol = 0; idx_pol < size_pol; idx_pol++)
       {
-        Polygon polygon = geometry.m_polygon.at(idx_pol);
+        Polygon_topojson_t polygon = geometry.m_polygon.at(idx_pol);
         size_t size_arcs = polygon.arcs.size();
 
         ///////////////////////////////////////////////////////////////////////////////////////

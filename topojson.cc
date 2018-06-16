@@ -264,7 +264,7 @@ int topojson_t::parse_geometry_object(JsonValue value)
             JsonValue arr_pol = arr_arcs->value;
             assert(arr_pol.getTag() == JSON_ARRAY);
             //indices into arc vector
-            Polygon polygon;
+            Polygon_topojson_t polygon;
             for (JsonNode *arr_values = arr_pol.toNode(); arr_values != nullptr; arr_values = arr_values->next)
             {
               assert(arr_values->value.getTag() == JSON_NUMBER);
@@ -282,7 +282,7 @@ int topojson_t::parse_geometry_object(JsonValue value)
               JsonValue arr_pol = arr_m_values->value;
               assert(arr_pol.getTag() == JSON_ARRAY);
               //indices into arc vector
-              Polygon polygon;
+              Polygon_topojson_t polygon;
               for (JsonNode *arr_values = arr_pol.toNode(); arr_values != nullptr; arr_values = arr_values->next)
               {
                 assert(arr_values->value.getTag() == JSON_NUMBER);
@@ -414,7 +414,7 @@ std::vector<double> topojson_t::get_first()
       size_t size_pol = geometry.m_polygon.size();
       for (size_t idx_pol = 0; idx_pol < size_pol; idx_pol++)
       {
-        Polygon polygon = geometry.m_polygon.at(idx_pol);
+        Polygon_topojson_t polygon = geometry.m_polygon.at(idx_pol);
         size_t size_arcs = polygon.arcs.size();
         for (size_t idx_arc = 0; idx_arc < size_arcs; idx_arc++)
         {

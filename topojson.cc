@@ -51,7 +51,7 @@ int is_topojson(const char* file_name)
     {
       assert(node->value.getTag() == JSON_STRING);
       std::string str = node->value.toString();
-      if (str.compare("Topology"))
+      if (str.compare("Topology") == 0)
       {
         json_type++;
       }
@@ -105,6 +105,7 @@ int topojson_t::convert(const char* file_name)
   }
 
   parse_root(value);
+  make_coordinates();
   free(buf);
   return 0;
 }
@@ -427,4 +428,64 @@ std::vector<double> topojson_t::get_first()
     }
   }
   return first;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//topojson_t::make_coordinates
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void topojson_t::make_coordinates()
+{
+  size_t size_geom = m_geom.size();
+  for (idx_geom = 0; idx_geom < size_geom; idx_geom++)
+  {
+    Geometry_t geometry = m_geom.at(idx_geom);
+    if (geometry.type.compare("Polygon") == 0)
+    {
+      size_t size_pol = geometry.m_polygon.size();
+      for (size_t idx_pol = 0; idx_pol < size_pol; idx_pol++)
+      {
+        Polygon_topojson_t polygon = geometry.m_polygon.at(idx_pol);
+        size_t size_arcs = polygon.arcs.size();
+
+        for (size_t idx_arc = 0; idx_arc < size_arcs; idx_arc++)
+        {
+          int index = polygon.arcs.at(idx_arc);
+          int index_q = index < 0 ? ~index : index;
+          arc_t arc = m_arcs.at(index_q);
+          size_t size_vec_arcs = arc.vec.size();
+          //if a topology is quantized, the positions of each arc in the topology which are quantized 
+          //must be delta-encoded. The first position of the arc is a normal position [x1, y1]. 
+          //The second position [x2, y2] is encoded as [dx2, dy2], where 
+          //x2 = x1 + dx2 and 
+          //y2 = y1 + dx2.
+          //The third position [x3, y3] is encoded as [dx3, dy3], where 
+          //x3 = x2 + dx3 = x1 + dx2 + dx3 and
+          //y3 = y2 + dy3 = y1 + dy2 + dy3 and so on.
+          int x0 = (int)arc.vec.at(0).at(0);
+          int y0 = (int)arc.vec.at(0).at(1);
+          std::vector<int> x;
+          std::vector<int> y;
+          x.push_back(x0);
+          y.push_back(y0);
+          for (size_t idx = 1; idx < size_vec_arcs; idx++)
+          {
+            int xn = x[idx - 1] + (int)arc.vec.at(idx).at(0);
+            int yn = y[idx - 1] + (int)arc.vec.at(idx).at(1);
+            x.push_back(xn);
+            y.push_back(yn);
+          }
+          for (size_t idx = 0; idx < size_vec_arcs; idx++)
+          {
+            int pos_quant[2];
+            pos_quant[0] = x[idx];
+            pos_quant[1] = y[idx];
+            std::vector<double> coord = transform_point(pos_quant);
+            m_geom.at(idx_geom).m_polygon.at(idx_pol).m_x.push_back(coord[0]);
+            m_geom.at(idx_geom).m_polygon.at(idx_pol).m_y.push_back(coord[1]);
+          }//size_vec_arcs
+        }//size_arcs
+      }//size_pol
+    }//"Polygon"
+  }//size_geom
 }

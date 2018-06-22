@@ -45,7 +45,11 @@ class WT_API Polygon_topojson_t
 {
 public:
   Polygon_topojson_t() {}
-  std::vector<int> arcs; //indices into arc_t array
+  //indices into arc_t array
+  std::vector<int> arcs;
+  //converted x and y coordinates
+  std::vector<double> m_x;
+  std::vector<double> m_y;
 };
 
 class WT_API Geometry_t
@@ -82,6 +86,7 @@ private:
   int parse_transform(JsonValue value);
   int parse_geometry_object(JsonValue value);
   int parse_arcs(JsonValue value);
+  void make_coordinates();
   double scale[2];
   double translate[2];
   size_t idx_geom; //helper

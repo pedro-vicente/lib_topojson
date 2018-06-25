@@ -462,27 +462,17 @@ void topojson_t::make_coordinates()
           //The third position [x3, y3] is encoded as [dx3, dy3], where 
           //x3 = x2 + dx3 = x1 + dx2 + dx3 and
           //y3 = y2 + dy3 = y1 + dy2 + dy3 and so on.
-          int x0 = (int)arc.vec.at(0).at(0);
-          int y0 = (int)arc.vec.at(0).at(1);
-          std::vector<int> x;
-          std::vector<int> y;
-          x.push_back(x0);
-          y.push_back(y0);
-          for (size_t idx = 1; idx < size_vec_arcs; idx++)
-          {
-            int xn = x[idx - 1] + (int)arc.vec.at(idx).at(0);
-            int yn = y[idx - 1] + (int)arc.vec.at(idx).at(1);
-            x.push_back(xn);
-            y.push_back(yn);
-          }
+          double x = 0;
+          double y = 0;
           for (size_t idx = 0; idx < size_vec_arcs; idx++)
           {
-            int pos_quant[2];
-            pos_quant[0] = x[idx];
-            pos_quant[1] = y[idx];
-            std::vector<double> coord = transform_point(pos_quant);
-            m_geom.at(idx_geom).m_polygon.at(idx_pol).m_x.push_back(coord[0]);
-            m_geom.at(idx_geom).m_polygon.at(idx_pol).m_y.push_back(coord[1]);
+            double position[2];
+            position[0] = arc.vec.at(idx).at(0);
+            position[1] = arc.vec.at(idx).at(1);
+            position[0] = (x += position[0]) * scale[0] + translate[0];
+            position[1] = (y += position[1]) * scale[1] + translate[1];
+            m_geom.at(idx_geom).m_polygon.at(idx_pol).m_x.push_back(position[0]);
+            m_geom.at(idx_geom).m_polygon.at(idx_pol).m_y.push_back(position[1]);
           }//size_vec_arcs
         }//size_arcs
       }//size_pol

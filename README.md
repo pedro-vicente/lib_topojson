@@ -157,6 +157,6 @@ Render by Wt Leaflet branch
 
 https://github.com/pedro-vicente/wt
 
-![image](https://user-images.githubusercontent.com/6119070/41197489-7e51fe16-6c2e-11e8-853b-a1122ca8bcb5.png)
+![image](https://user-images.githubusercontent.com/6119070/41950762-ae7f33aa-7995-11e8-85a7-661c3630d5c8.png)
 
 

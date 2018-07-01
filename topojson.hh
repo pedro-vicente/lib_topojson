@@ -62,6 +62,19 @@ public:
   std::vector<Polygon_topojson_t> m_polygon;
 };
 
+//TopoJSON always consists of a single topology object. 
+//A topology may contain any number of named geometry objects. 
+class WT_API topology_object_t
+{
+public:
+  topology_object_t(std::string name_) :
+    name(name_)
+  {
+  }
+  std::string name;
+  std::vector<Geometry_t> m_geom;
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //topojson_t
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +87,15 @@ public:
   {
     scale[0] = scale[1] = translate[0] = translate[1] = 0;
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  //storage as an array of topologies
+  //coordinates must be generated per topology index
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  std::vector<topology_object_t> m_topology;
+  void make_coordinates(size_t topology_index);
   int convert(const char* file_name);
-  std::vector<Geometry_t> m_geom;
   std::vector<arc_t> m_arcs;
   std::vector<double> transform_point(const int position_quant[2]);
   std::vector<double> get_first();
@@ -86,7 +106,6 @@ private:
   int parse_transform(JsonValue value);
   int parse_geometry_object(JsonValue value);
   int parse_arcs(JsonValue value);
-  void make_coordinates();
   double scale[2];
   double translate[2];
   size_t idx_geom; //helper

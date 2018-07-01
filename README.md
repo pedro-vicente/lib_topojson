@@ -259,11 +259,13 @@ void topojson_t::make_coordinates()
 }
 ```
 
-# rendered file example.quantized.topojson
+# Rendering
 
 Render by WxWidgets GUI library
 
 https://github.com/pedro-vicente/render_geojson
+
+![image](https://user-images.githubusercontent.com/6119070/41935976-a4eb5530-7959-11e8-9f51-5a7e0be79197.png)
 
 Render by Wt web framewwork, Leaflet branch
 
